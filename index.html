@@ -6,7 +6,243 @@
     <title>Electrical Load Calculator - Pro</title>
     <script src="https://cdn.tailwindcss.com"></script> <!-- Tailwind CSS CDN -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css"> <!-- Link to your CSS file -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-image: linear-gradient(to top right, #e0e7ff, #c7d2fe, #e0e7ff);
+        }
+        .app-container {
+            max-width: 1200px;
+            margin: 2.5rem auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+        h1.main-title {
+            font-weight: 800;
+            background: linear-gradient(to right, #4f46e5, #7c3aed, #db2777);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        h2.section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #3730a3;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #c7d2fe;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        h2.section-title::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 28px;
+            background-color: #6366f1;
+            margin-right: 0.75rem;
+            border-radius: 3px;
+        }
+        .input-group { margin-bottom: 1.25rem; }
+        .input-group label {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-weight: 500;
+            color: #4b5563;
+        }
+        .input-field, .select-field {
+            width: 100%;
+            padding: 0.875rem 1.125rem;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            font-size: 0.95rem;
+            background-color: #f9fafb;
+        }
+        .input-field:focus, .select-field:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+            outline: none;
+            background-color: #fff;
+        }
+        .btn {
+            padding: 0.875rem 1.75rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        .btn:active {
+            transform: translateY(0px);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        .btn-primary {
+            background-image: linear-gradient(to right, #4f46e5 0%, #6366f1 50%, #818cf8 100%);
+            color: white;
+        }
+        .btn-primary:hover { background-image: linear-gradient(to right, #4338ca 0%, #4f46e5 50%, #6366f1 100%); }
+
+        .btn-secondary {
+            background-image: linear-gradient(to right, #6b7280 0%, #4b5563 100%);
+            color: white;
+        }
+        .btn-secondary:hover { background-image: linear-gradient(to right, #4b5563 0%, #374151 100%);}
+
+        .btn-danger {
+            background-image: linear-gradient(to right, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+        .btn-danger:hover { background-image: linear-gradient(to right, #dc2626 0%, #b91c1c 100%); }
+        .btn-sm {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.875rem;
+        }
+
+        .section-card {
+            background-color: #fff;
+            border: 1px solid #e5e7eb;
+            border-left: 5px solid #6366f1;
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.07), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        .area-card {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.04);
+        }
+        .area-card .area-name-input {
+            background-color: transparent;
+            border: none;
+            border-bottom: 2px dashed #cbd5e1;
+            border-radius: 0;
+            padding-left: 0;
+            font-size: 1.25rem;
+        }
+        .area-card .area-name-input:focus {
+            border-bottom-color: #6366f1;
+            box-shadow: none;
+        }
+
+        .appliance-table { width: 100%; margin-top: 1rem; border-collapse: separate; border-spacing: 0 0.5rem; }
+        .appliance-table th, .appliance-table td {
+            padding: 0.875rem 1rem;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+        .appliance-table thead tr { box-shadow: none; }
+        .appliance-table th {
+            background-color: #eef2ff;
+            color: #3730a3;
+            font-weight: 600;
+            border-bottom: 2px solid #c7d2fe;
+        }
+        .appliance-table td { border-bottom: 1px solid #e5e7eb; }
+        .appliance-table tr:last-child td { border-bottom: none; }
+        .appliance-table tbody tr:hover { background-color: #f3f4f6; }
+
+        .summary-card {
+            background-image: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: #e0e7ff;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.2), 0 10px 10px -5px rgba(79, 70, 229, 0.1);
+        }
+        .summary-card h2.section-title {
+            color: #fff;
+            border-bottom-color: #a5b4fc;
+        }
+        .summary-card h2.section-title::before { background-color: #fff; }
+        .summary-card .input-group label { color: #c7d2fe; }
+        .summary-card .input-field { background-color: rgba(255,255,255,0.1); border-color: #a5b4fc; color: #fff; }
+        .summary-card .input-field::placeholder { color: #c7d2fe; }
+        .summary-card .input-field:focus { background-color: rgba(255,255,255,0.2); border-color: #fff; }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            font-size: 1.1rem;
+            border-bottom: 1px solid rgba(224, 231, 255, 0.3);
+        }
+        .summary-item:last-child { border-bottom: none; }
+        .summary-item span { color: #e0e7ff; }
+        .summary-item strong { color: #fff; font-weight: 600; }
+        .summary-card .text-gray-600 { color: #c7d2fe !important; }
+        .summary-card .bg-indigo-50 { background-color: rgba(255,255,255,0.1) !important; border-color: rgba(224,231,255,0.3) !important; }
+
+        /* Styles for ALL ad placeholders */
+        .ad-placeholder {
+            width: 100%;
+            margin: 2rem auto; /* Vertical spacing */
+            display: flex;
+            justify-content: center; /* Center the ad iframe if it's smaller than the container */
+            align-items: center;
+            /* background-color: #f0f0f8; */ /* Optional: for visibility */
+            /* border: 1px dashed #ccc; */   /* Optional: for visibility */
+            overflow: hidden; /* Prevent large ads from breaking layout if not responsive */
+        }
+        .ad-placeholder-top { min-height: 60px; }      /* For old top ad 468x60 */
+        .ad-placeholder-banner { min-height: 90px; }   /* For new "Top down" ad 728x90 */
+        .ad-placeholder-box { min-height: 250px; }     /* For new "Middle up" ad 300x250 */
+        .ad-placeholder-middle { min-height: 50px; }   /* For old middle ad 320x50 */
+        .ad-placeholder-bottom { min-height: 90px; }   /* For old bottom ad 728x90 */
+
+
+        @media print {
+            body { background-image: none; background-color: #fff; font-family: Arial, sans-serif; font-size: 10pt; margin: 0; padding: 0; }
+            .app-container, .no-print, .ad-placeholder { display: none !important; } /* Hide ad placeholders on print */
+            #print-invoice-container { display: block !important; width: 100%; margin: 0; padding: 20px; box-shadow: none; border-radius: 0; }
+            #print-invoice-container h1, #print-invoice-container h2, #print-invoice-container h3 { color: #000 !important; margin-bottom: 0.5em; }
+            #print-invoice-container h1 { font-size: 18pt; text-align: center; margin-bottom: 1em; }
+            #print-invoice-container h2 { font-size: 14pt; border-bottom: 1px solid #ccc; padding-bottom: 0.3em; margin-top: 1.5em; }
+            #print-invoice-container h3 { font-size: 12pt; margin-top: 1em; }
+            #print-invoice-container table { width: 100%; border-collapse: collapse; margin-bottom: 1em; font-size: 9pt; }
+            #print-invoice-container th, #print-invoice-container td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+            #print-invoice-container th { background-color: #f0f0f0; font-weight: bold; }
+            .print-area-name-row td { background-color: #e9e9e9; font-weight: bold; font-style: italic; }
+            .print-area-subtotal-row td { font-weight: bold; text-align: right !important; }
+            .print-summary-label { font-weight: bold; }
+            .print-footer { margin-top: 2em; font-size: 8pt; border-top: 1px solid #ccc; padding-top: 0.5em; text-align: center;}
+            table { page-break-inside: auto; }
+            tr    { page-break-inside: avoid; page-break-after: auto; }
+            thead { display: table-header-group; }
+            tfoot { display: table-footer-group; }
+            .page-break-before { page-break-before: always; }
+        }
+
+        @media (max-width: 768px) {
+            .app-container { padding: 1.5rem; margin: 1rem auto; border-radius: 15px;}
+            h2.section-title { font-size: 1.5rem; }
+            h2.section-title::before { width: 6px; height: 24px; margin-right: 0.5rem;}
+            .section-card { padding: 1.25rem; }
+            .btn { width: 100%; margin-bottom: 0.75rem; padding: 0.75rem 1.5rem;}
+            .flex-col-md-row { flex-direction: column; }
+            .flex-col-md-row > .btn { margin-right: 0 !important; }
+            .appliance-table th, .appliance-table td { font-size: 0.8rem; padding: 0.6rem 0.75rem; }
+            .summary-item { font-size: 1rem; }
+            .summary-card { padding: 1.5rem;}
+            .ad-placeholder { margin: 1.5rem auto; } /* Adjust spacing for mobile */
+        }
+    </style>
 </head>
 <body>
     <div class="app-container">
@@ -19,7 +255,7 @@
         <div class="ad-placeholder ad-placeholder-top">
             <script type="text/javascript">
                 atOptions = {
-                    'key' : 'd9cd18d203f70d5819709389555db784', // Original top ad key
+                    'key' : 'd9cd18d203f70d5819709389555db784', 
                     'format' : 'iframe',
                     'height' : 60,
                     'width' : 468,
@@ -76,7 +312,7 @@
         <div class="ad-placeholder ad-placeholder-banner">
             <script type="text/javascript">
                 atOptions = {
-                    'key' : '795d93e191c197a63cbbb1157ad68d66', // Key for 728x90
+                    'key' : '795d93e191c197a63cbbb1157ad68d66', 
                     'format' : 'iframe',
                     'height' : 90,
                     'width' : 728,
@@ -98,7 +334,7 @@
         <div class="ad-placeholder ad-placeholder-box">
             <script type="text/javascript">
                 atOptions = {
-                    'key' : '0a67337a7831ffa876a0649209acb967', // Key for 300x250
+                    'key' : '0a67337a7831ffa876a0649209acb967', 
                     'format' : 'iframe',
                     'height' : 250,
                     'width' : 300,
@@ -112,7 +348,7 @@
         <div class="ad-placeholder ad-placeholder-middle">
             <script type="text/javascript">
                 atOptions = {
-                    'key' : 'ff359359e6daa482f93b17ed85c0bec3', // Original middle ad key
+                    'key' : 'ff359359e6daa482f93b17ed85c0bec3', 
                     'format' : 'iframe',
                     'height' : 50,
                     'width' : 320,
@@ -157,7 +393,7 @@
         <div class="ad-placeholder ad-placeholder-bottom">
             <script type="text/javascript">
                 atOptions = {
-                    'key' : '795d93e191c197a63cbbb1157ad68d66', // Original bottom ad key (same as new "Top down")
+                    'key' : '795d93e191c197a63cbbb1157ad68d66', 
                     'format' : 'iframe',
                     'height' : 90,
                     'width' : 728,
@@ -174,6 +410,489 @@
         <!-- Content will be dynamically generated here by JavaScript -->
     </div>
 
-    <script src="script.js"></script> <!-- Link to your JavaScript file -->
+    <script>
+        let areas = [];
+        const COMMON_APPLIANCES = {
+            // Lighting
+            "LED Bulb (5W)": 5, "LED Bulb (9W)": 9, "LED Bulb (12W)": 12, "LED Tube Light (18W)": 18, "LED Tube Light (22W)": 22, "CFL (15W)": 15, "Incandescent Bulb (60W)": 60, "Chandelier (Small)": 100, "Chandelier (Large)": 300, "Downlight/Spotlight (LED 7W)": 7,
+            // Fans
+            "Ceiling Fan": 75, "Exhaust Fan (Small)": 25, "Exhaust Fan (Large)": 50, "Pedestal Fan": 60, "Wall Fan": 55,
+            // Living Room & Bedroom
+            "Television (LED 32\")": 50, "Television (LED 43\")": 75, "Television (LED 55\")": 120, "Television (LED 65\")": 180, "Home Theater System": 300, "Set-Top Box": 20, "Gaming Console": 150, "Laptop": 65, "Desktop Computer (with Monitor)": 250, "Wi-Fi Router": 10, "Mobile Charger": 5, "Air Cooler (Small)": 150, "Air Cooler (Large)": 250,
+            // Air Conditioning
+            "AC (1 Ton Inverter)": 1000, "AC (1.5 Ton Inverter)": 1500, "AC (2 Ton Inverter)": 2000, "AC (1 Ton Non-Inverter)": 1200, "AC (1.5 Ton Non-Inverter)": 1800, "AC (2 Ton Non-Inverter)": 2400,
+            // Kitchen
+            "Refrigerator (Single Door, <250L)": 150, "Refrigerator (Double Door, <350L)": 200, "Refrigerator (Side-by-Side)": 300, "Microwave Oven": 1200, "Oven (Built-in)": 2500, "Induction Cooktop (1 Zone)": 1800, "Induction Cooktop (2 Zones)": 3000, "Mixer Grinder": 750, "Blender": 300, "Toaster": 800, "Electric Kettle": 1500, "Water Purifier (RO+UV)": 30, "Dishwasher": 1500, "Chimney/Hood": 200,
+            // Bathroom & Utility
+            "Water Heater/Geyser (Storage 15L)": 2000, "Water Heater/Geyser (Storage 25L)": 3000, "Water Heater/Geyser (Instant 3kW)": 3000, "Water Heater/Geyser (Instant 6kW)": 6000, "Washing Machine (Semi-Automatic)": 400, "Washing Machine (Top Load Automatic)": 500, "Washing Machine (Front Load Automatic)": 2000, "Clothes Dryer": 2500, "Iron Box": 1000, "Hair Dryer": 1500, "Vacuum Cleaner": 1200,
+            // Pumps
+            "Water Pump (0.5 HP)": 375, "Water Pump (1 HP)": 750, "Submersible Pump (1 HP)": 750,
+            // General Sockets (for miscellaneous loads)
+            "5A Socket Outlet": 100
+        };
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM fully loaded and parsed. Initializing calculator script...");
+
+            const addAreaBtn = document.getElementById('addAreaBtn');
+            const areasContainer = document.getElementById('areasContainer');
+            
+            const projectNameInput = document.getElementById('projectName');
+            const clientNameInput = document.getElementById('clientName');
+            const projectAddressInput = document.getElementById('projectAddress');
+            const calcDateInput = document.getElementById('calcDate');
+
+            const voltageInput = document.getElementById('voltage');
+            const phaseInput = document.getElementById('phase');
+            const powerFactorInput = document.getElementById('powerFactor');
+            const diversityFactorInput = document.getElementById('diversityFactor');
+            
+            const totalConnectedLoadWEl = document.getElementById('totalConnectedLoadW');
+            const totalConnectedLoadKWEl = document.getElementById('totalConnectedLoadKW');
+            const maxDemandWEl = document.getElementById('maxDemandW');
+            const maxDemandKWEl = document.getElementById('maxDemandKW');
+            const calculatedCurrentEl = document.getElementById('calculatedCurrent');
+
+            const printBtn = document.getElementById('printBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            
+            let areaIdCounter = 0;
+
+            function createAreaElement(area) {
+                const areaCard = document.createElement('div');
+                areaCard.className = 'area-card';
+                areaCard.dataset.areaId = area.id;
+
+                areaCard.innerHTML = `
+                    <div class="flex justify-between items-center mb-4">
+                        <input type="text" value="${area.name}" class="input-field area-name-input font-semibold text-lg text-indigo-700 flex-grow" placeholder="Enter Area Name (e.g., Kitchen)">
+                        <button class="btn btn-danger btn-sm remove-area-btn ml-4">Remove Area</button>
+                    </div>
+                    <table class="appliance-table">
+                        <thead>
+                            <tr>
+                                <th class="w-2/5">Appliance</th>
+                                <th class="w-1/5">Wattage (W)</th>
+                                <th class="w-1/5">Quantity</th>
+                                <th class="w-1/5">Total (W)</th>
+                                <th class="w-1/12"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div class="mt-4 flex flex-col sm:flex-row justify-between items-center">
+                        <div class="flex space-x-2 mb-3 sm:mb-0">
+                             <button class="btn btn-primary btn-sm add-appliance-btn">Add Appliance</button>
+                             <button class="btn btn-secondary btn-sm add-common-appliance-btn">Add Common</button>
+                        </div>
+                        <div class="text-right font-semibold">
+                            Area Subtotal: <span class="area-subtotal text-indigo-600">0 W</span>
+                        </div>
+                    </div>
+                `;
+
+                const areaNameInputEl = areaCard.querySelector('.area-name-input');
+                if (areaNameInputEl) {
+                    areaNameInputEl.addEventListener('input', (e) => {
+                        area.name = e.target.value;
+                        saveState();
+                    });
+                }
+
+                const removeAreaBtnEl = areaCard.querySelector('.remove-area-btn');
+                if (removeAreaBtnEl) {
+                    removeAreaBtnEl.addEventListener('click', () => {
+                        areas = areas.filter(a => a.id !== area.id);
+                        renderAreas();
+                        calculateTotals();
+                        saveState();
+                    });
+                }
+
+                const addApplianceBtnEl = areaCard.querySelector('.add-appliance-btn');
+                if (addApplianceBtnEl) {
+                    addApplianceBtnEl.addEventListener('click', () => {
+                        addApplianceToArea(area.id);
+                    });
+                }
+
+                const addCommonApplianceBtnEl = areaCard.querySelector('.add-common-appliance-btn');
+                if (addCommonApplianceBtnEl) {
+                    addCommonApplianceBtnEl.addEventListener('click', () => {
+                        showCommonApplianceModal(area.id);
+                    });
+                }
+                
+                const tbody = areaCard.querySelector('tbody');
+                if (tbody) {
+                    area.appliances.forEach(appliance => {
+                        tbody.appendChild(createApplianceRowElement(area.id, appliance));
+                    });
+                }
+
+                updateAreaSubtotal(area.id);
+                return areaCard;
+            }
+            
+            function createApplianceRowElement(areaId, appliance) {
+                const tr = document.createElement('tr');
+                tr.dataset.applianceId = appliance.id;
+                tr.innerHTML = `
+                    <td><input type="text" class="input-field input-field-sm appliance-name" value="${appliance.name}" placeholder="Appliance Name"></td>
+                    <td><input type="number" class="input-field input-field-sm appliance-wattage" value="${appliance.wattage}" min="0" placeholder="e.g. 100"></td>
+                    <td><input type="number" class="input-field input-field-sm appliance-quantity" value="${appliance.quantity}" min="1" placeholder="e.g. 1"></td>
+                    <td class="appliance-total-wattage font-medium">${(appliance.wattage * appliance.quantity).toFixed(0)} W</td>
+                    <td><button class="btn btn-danger btn-sm remove-appliance-btn p-2 text-xs">✕</button></td>
+                `;
+
+                tr.querySelectorAll('.input-field').forEach(input => {
+                    input.addEventListener('input', () => {
+                        const area = areas.find(a => a.id === areaId);
+                        if (!area) return;
+                        const currentAppliance = area.appliances.find(app => app.id === appliance.id);
+                        if (!currentAppliance) return;
+                        
+                        currentAppliance.name = tr.querySelector('.appliance-name').value;
+                        currentAppliance.wattage = parseFloat(tr.querySelector('.appliance-wattage').value) || 0;
+                        currentAppliance.quantity = parseInt(tr.querySelector('.appliance-quantity').value) || 1;
+                        
+                        const totalWattageEl = tr.querySelector('.appliance-total-wattage');
+                        if (totalWattageEl) {
+                            totalWattageEl.textContent = `${(currentAppliance.wattage * currentAppliance.quantity).toFixed(0)} W`;
+                        }
+                        updateAreaSubtotal(areaId);
+                        calculateTotals();
+                        saveState();
+                    });
+                });
+
+                const removeApplianceBtnEl = tr.querySelector('.remove-appliance-btn');
+                if (removeApplianceBtnEl) {
+                    removeApplianceBtnEl.addEventListener('click', () => {
+                        const area = areas.find(a => a.id === areaId);
+                        if (!area) return;
+                        area.appliances = area.appliances.filter(app => app.id !== appliance.id);
+                        tr.remove();
+                        updateAreaSubtotal(areaId);
+                        calculateTotals();
+                        saveState();
+                    });
+                }
+                return tr;
+            }
+
+            // ++ Functions to make buttons work ++
+            function renderAreas() {
+                if (!areasContainer) {
+                    console.warn("areasContainer element not found. Cannot render areas.");
+                    return;
+                }
+                areasContainer.innerHTML = ''; // Clear existing areas
+                areas.forEach(area => {
+                    areasContainer.appendChild(createAreaElement(area));
+                });
+                if (typeof calculateTotals === 'function') {
+                    calculateTotals(); // Ensure totals are updated after rendering
+                } else {
+                    console.warn('calculateTotals function is not defined.');
+                }
+            }
+
+            function addNewArea() {
+                areaIdCounter++;
+                const newArea = {
+                    id: areaIdCounter,
+                    name: `Area ${areaIdCounter}`,
+                    appliances: []
+                };
+                areas.push(newArea);
+                if (areasContainer) {
+                    areasContainer.appendChild(createAreaElement(newArea));
+                } else {
+                    console.warn("areasContainer element not found. Cannot append new area element.");
+                }
+                if (typeof calculateTotals === 'function') calculateTotals();
+                if (typeof saveState === 'function') saveState();
+            }
+
+            function addApplianceToArea(areaId, applianceDetails = null) {
+                const area = areas.find(a => a.id === areaId);
+                if (!area) {
+                    console.warn(`Area with id ${areaId} not found. Cannot add appliance.`);
+                    return;
+                }
+
+                const newAppliance = applianceDetails ? 
+                    { id: Date.now() + Math.random(), ...applianceDetails, quantity: parseInt(applianceDetails.quantity) || 1 } : 
+                    {
+                        id: Date.now() + Math.random(), // Simple unique ID for appliance
+                        name: 'New Appliance',
+                        wattage: 0,
+                        quantity: 1
+                    };
+                area.appliances.push(newAppliance);
+
+                const areaCard = areasContainer ? areasContainer.querySelector(`.area-card[data-area-id="${areaId}"]`) : null;
+                if (areaCard) {
+                    const tbody = areaCard.querySelector('tbody');
+                    if (tbody) {
+                        tbody.appendChild(createApplianceRowElement(areaId, newAppliance));
+                    } else {
+                        console.warn(`Table body not found in area card ${areaId}.`);
+                    }
+                } else {
+                     console.warn(`Area card ${areaId} not found in DOM for adding appliance row.`);
+                }
+                if (typeof updateAreaSubtotal === 'function') updateAreaSubtotal(areaId);
+                if (typeof calculateTotals === 'function') calculateTotals();
+                if (typeof saveState === 'function') saveState();
+            }
+            
+            function resetAllData() {
+                if (confirm("Are you sure you want to reset all data? This action cannot be undone.")) {
+                    localStorage.removeItem('electricalLoadCalcProData');
+                    areas = [];
+                    areaIdCounter = 0;
+                    
+                    if(projectNameInput) projectNameInput.value = '';
+                    if(clientNameInput) clientNameInput.value = '';
+                    if(projectAddressInput) projectAddressInput.value = '';
+                    if(calcDateInput) { 
+                        try { calcDateInput.valueAsDate = new Date(); } 
+                        catch(e) { calcDateInput.value = new Date().toISOString().split('T')[0]; }
+                    }
+                    
+                    if(voltageInput) voltageInput.value = "230";
+                    if(phaseInput) phaseInput.value = "1";
+                    if(powerFactorInput) powerFactorInput.value = "0.85";
+                    if(diversityFactorInput) diversityFactorInput.value = "0.7";
+
+                    renderAreas(); // Clears UI and prepares for the new default area
+                    // calculateTotals and saveState will be called by addNewArea
+                    addNewArea(); // Adds a new default area, which also renders it and updates totals/state
+                }
+            }
+            // -- End Functions --
+
+            function showCommonApplianceModal(areaId) {
+                let options = "Select a common appliance:\n";
+                let i = 1;
+                const applianceKeys = Object.keys(COMMON_APPLIANCES);
+                for (const key of applianceKeys) {
+                    options += `${i}. ${key} (${COMMON_APPLIANCES[key]}W)\n`;
+                    i++;
+                }
+                options += "\nEnter number or name (or part of name):";
+
+                const choice = prompt(options);
+                if (choice) {
+                    let selectedApplianceName = null;
+                    let selectedApplianceWattage = 0;
+
+                    const choiceNum = parseInt(choice);
+                    if (!isNaN(choiceNum) && choiceNum > 0 && choiceNum <= applianceKeys.length) {
+                        selectedApplianceName = applianceKeys[choiceNum - 1];
+                        selectedApplianceWattage = COMMON_APPLIANCES[selectedApplianceName];
+                    } else { 
+                        const lowerChoice = choice.toLowerCase();
+                        for (const key of applianceKeys) {
+                            if (key.toLowerCase().includes(lowerChoice)) {
+                                selectedApplianceName = key;
+                                selectedApplianceWattage = COMMON_APPLIANCES[key];
+                                break;
+                            }
+                        }
+                    }
+
+                    if (selectedApplianceName) {
+                         addApplianceToArea(areaId, { name: selectedApplianceName, wattage: selectedApplianceWattage, quantity: 1 });
+                    } else {
+                        alert("Invalid selection.");
+                    }
+                }
+            }
+
+            function updateAreaSubtotal(areaId) {
+                const area = areas.find(a => a.id === areaId);
+                if (!area) return; 
+                const subtotal = area.appliances.reduce((sum, app) => sum + (app.wattage * app.quantity), 0);
+                area.subtotal = subtotal;
+                
+                if (areasContainer) {
+                    const areaCard = areasContainer.querySelector(`.area-card[data-area-id="${areaId}"]`);
+                    if (areaCard) {
+                        const subtotalEl = areaCard.querySelector('.area-subtotal');
+                        if (subtotalEl) {
+                            subtotalEl.textContent = `${subtotal.toFixed(0)} W`;
+                        }
+                    }
+                }
+            }
+            
+            if (addAreaBtn) { 
+                addAreaBtn.addEventListener('click', addNewArea);
+            } else {
+                console.error("Add New Area button not found!");
+            }
+
+            function calculateTotals() {
+                const totalConnectedLoad = areas.reduce((sum, area) => sum + (area.subtotal || 0), 0);
+                const diversity = (diversityFactorInput && parseFloat(diversityFactorInput.value)) || 0.7;
+                const maxDemand = totalConnectedLoad * diversity;
+                
+                const V = (voltageInput && parseFloat(voltageInput.value)) || 230;
+                const PF = (powerFactorInput && parseFloat(powerFactorInput.value)) || 0.85;
+                const phaseMultiplier = (phaseInput && phaseInput.value === "3") ? Math.sqrt(3) : 1;
+                
+                let current = 0;
+                if (V > 0 && PF > 0 && phaseMultiplier > 0) {
+                     current = maxDemand / (V * PF * phaseMultiplier);
+                }
+
+                if (totalConnectedLoadWEl) totalConnectedLoadWEl.textContent = totalConnectedLoad.toFixed(0);
+                if (totalConnectedLoadKWEl) totalConnectedLoadKWEl.textContent = (totalConnectedLoad / 1000).toFixed(2);
+                if (maxDemandWEl) maxDemandWEl.textContent = maxDemand.toFixed(0);
+                if (maxDemandKWEl) maxDemandKWEl.textContent = (maxDemand / 1000).toFixed(2);
+                if (calculatedCurrentEl) calculatedCurrentEl.textContent = current.toFixed(2);
+            }
+
+            [voltageInput, phaseInput, powerFactorInput, diversityFactorInput].forEach(input => {
+                if (input) { 
+                    input.addEventListener('input', () => {
+                        calculateTotals();
+                        saveState(); 
+                    });
+                }
+            });
+
+            if (resetBtn) { 
+                resetBtn.addEventListener('click', resetAllData);
+            }
+
+            if (printBtn) { 
+                printBtn.addEventListener('click', generatePrintableInvoice);
+            }
+
+
+            function generatePrintableInvoice() {
+                const printContainer = document.getElementById('print-invoice-container');
+                if (!printContainer) return;
+                
+                let html = `<h1>Electrical Load Calculation Summary</h1>`;
+                if (calcDateInput) html += `<p><strong>Date:</strong> ${new Date(calcDateInput.value || Date.now()).toLocaleDateString()}</p>`;
+                
+                if (projectNameInput && projectNameInput.value) html += `<p><strong>Project Name:</strong> ${projectNameInput.value}</p>`;
+                if (clientNameInput && clientNameInput.value) html += `<p><strong>Client Name:</strong> ${clientNameInput.value}</p>`;
+                if (projectAddressInput && projectAddressInput.value) html += `<p><strong>Project Address:</strong> ${projectAddressInput.value}</p>`;
+
+                html += `<h2>System Parameters</h2>`;
+                if (voltageInput) html += `<p><span class="print-summary-label">System Voltage:</span> ${voltageInput.value} V</p>`;
+                if (phaseInput && phaseInput.options[phaseInput.selectedIndex]) html += `<p><span class="print-summary-label">System Phase:</span> ${phaseInput.options[phaseInput.selectedIndex].text}</p>`;
+                if (powerFactorInput) html += `<p><span class="print-summary-label">Assumed Power Factor:</span> ${powerFactorInput.value}</p>`;
+                if (diversityFactorInput) html += `<p><span class="print-summary-label">Overall Diversity Factor:</span> ${diversityFactorInput.value}</p>`;
+                
+                if (areas.length > 0) {
+                    html += `<h2 class="page-break-before">Load Details by Area</h2>`;
+                    html += `<table><thead><tr><th>Area</th><th>Appliance</th><th>Wattage (W)</th><th>Qty</th><th>Total (W)</th></tr></thead><tbody>`;
+                    
+                    areas.forEach(area => {
+                        if (area.appliances.length > 0) {
+                            html += `<tr class="print-area-name-row"><td colspan="5">${area.name || 'Unnamed Area'}</td></tr>`;
+                            area.appliances.forEach(app => {
+                                html += `<tr>
+                                    <td></td>
+                                    <td>${app.name}</td>
+                                    <td>${app.wattage}</td>
+                                    <td>${app.quantity}</td>
+                                    <td>${(app.wattage * app.quantity).toFixed(0)}</td>
+                                </tr>`;
+                            });
+                            html += `<tr class="print-area-subtotal-row"><td colspan="4">Area Subtotal:</td><td>${(area.subtotal || 0).toFixed(0)} W</td></tr>`;
+                        }
+                    });
+                    html += `</tbody></table>`;
+                }
+
+                html += `<h2 class="page-break-before">Calculation Summary</h2>`;
+                if (totalConnectedLoadWEl && totalConnectedLoadKWEl) html += `<p><span class="print-summary-label">Total Connected Load:</span> ${totalConnectedLoadWEl.textContent} W / ${totalConnectedLoadKWEl.textContent} kW</p>`;
+                if (maxDemandWEl && maxDemandKWEl) html += `<p><span class="print-summary-label">Estimated Maximum Demand (with Diversity):</span> ${maxDemandWEl.textContent} W / ${maxDemandKWEl.textContent} kW</p>`;
+                if (calculatedCurrentEl) html += `<p><span class="print-summary-label">Calculated Load Current (at Max Demand):</span> ${calculatedCurrentEl.textContent} Amps</p>`;
+                
+                html += `<div class="print-footer">
+                    <p><strong>Important Note:</strong> This calculation is an estimate for planning and preliminary design purposes only. 
+                    Consult a qualified electrical engineer or licensed electrician for final design, equipment sizing, and compliance with local codes and safety regulations.
+                    </p>
+                    <p>Generated by Electrical Load Calculator - Pro on ${new Date().toLocaleString()}</p>
+                </div>`;
+
+                printContainer.innerHTML = html;
+                window.print();
+            }
+
+            function saveState() {
+                const projectData = {
+                    projectName: projectNameInput ? projectNameInput.value : '',
+                    clientName: clientNameInput ? clientNameInput.value : '',
+                    projectAddress: projectAddressInput ? projectAddressInput.value : '',
+                    calcDate: calcDateInput ? calcDateInput.value : '',
+                    voltage: voltageInput ? voltageInput.value : '230',
+                    phase: phaseInput ? phaseInput.value : '1',
+                    powerFactor: powerFactorInput ? powerFactorInput.value : '0.85',
+                    diversityFactor: diversityFactorInput ? diversityFactorInput.value : '0.7',
+                    areas: areas,
+                    areaIdCounter: areaIdCounter
+                };
+                localStorage.setItem('electricalLoadCalcProData', JSON.stringify(projectData));
+            }
+
+            function loadState() {
+                const savedData = localStorage.getItem('electricalLoadCalcProData');
+                if (savedData) {
+                    try {
+                        const projectData = JSON.parse(savedData);
+                        if(projectNameInput) projectNameInput.value = projectData.projectName || '';
+                        if(clientNameInput) clientNameInput.value = projectData.clientName || '';
+                        if(projectAddressInput) projectAddressInput.value = projectData.projectAddress || '';
+                        if(calcDateInput) calcDateInput.value = projectData.calcDate || new Date().toISOString().split('T')[0];
+                        
+                        if(voltageInput) voltageInput.value = projectData.voltage || "230";
+                        if(phaseInput) phaseInput.value = projectData.phase || "1";
+                        if(powerFactorInput) powerFactorInput.value = projectData.powerFactor || "0.85";
+                        if(diversityFactorInput) diversityFactorInput.value = projectData.diversityFactor || "0.7";
+                        
+                        areas = projectData.areas || [];
+                        areaIdCounter = projectData.areaIdCounter || 0;
+
+                        renderAreas();
+                    } catch (e) {
+                        console.error("Error parsing saved data from localStorage:", e);
+                        localStorage.removeItem('electricalLoadCalcProData'); 
+                        if(calcDateInput) calcDateInput.valueAsDate = new Date();
+                         if (areas.length === 0) { 
+                            addNewArea(); 
+                        }
+                    }
+                } else { // No saved data
+                    if(calcDateInput) {
+                        try { calcDateInput.valueAsDate = new Date(); }
+                        catch(e) { calcDateInput.value = new Date().toISOString().split('T')[0]; }
+                    }
+                    if (areas.length === 0) { 
+                        addNewArea(); 
+                    }
+                }
+                calculateTotals(); 
+            }
+            
+            [projectNameInput, clientNameInput, projectAddressInput, calcDateInput].forEach(input => {
+                if (input) { 
+                    input.addEventListener('input', saveState);
+                }
+            });
+
+            loadState(); 
+            console.log("Calculator script fully initialized. Check console for any errors if buttons are not working.");
+        });
+    </script>
 </body>
 </html>
